@@ -1,12 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
+import createStore from 'store/index';
+import apiService from 'services/api';
 import App from './app';
+
+const store = createStore(
+  // eslint-disable-next-line no-underscore-dangle
+  window.__PRELOADED_STATE__,
+  {
+    api: apiService(),
+  },
+);
 
 const render = (Component) => {
   ReactDOM.hydrate(
     <AppContainer>
-      <Component />
+      <Provider store={store}>
+        <Component />
+      </Provider>
     </AppContainer>,
     document.getElementById('root'),
   );

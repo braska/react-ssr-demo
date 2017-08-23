@@ -7,6 +7,8 @@ html
   body
     #root.
       !{content}
+    script.
+      window.__PRELOADED_STATE__ = !{state};
     script(src=assets['manifest.js'])
     script(src=assets['vendor.js'])
     script(src=assets['main.js'])

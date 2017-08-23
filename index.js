@@ -4,10 +4,15 @@ const express = require('express');
 const path = require('path');
 
 const createRenderer = (render, manifest) => (req, res, next) => {
-  res.render('index', {
-    assets: manifest,
-    content: render(),
-  });
+  render()
+    .then(({ content, state }) => {
+      res.render('index', {
+        content,
+        assets: manifest,
+        state,
+      });
+    })
+    .catch(next);
 };
 
 const app = express();

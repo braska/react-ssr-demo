@@ -2,3 +2,8 @@ import 'react';
 import 'react-dom';
 import 'react-hot-loader';
 import 'prop-types';
+import 'redux';
+import 'react-redux';
+import 'redux-saga';
+import 'redux-saga-thunk';
+import 'react-router-server';
