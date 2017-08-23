@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import styles from './styles.css';
 
@@ -19,6 +20,7 @@ const Home = ({ loadingItemsIsPending, loadingItemsHasFailed, items }) => {
         <li key={item.id}>{item.title}</li>
       ))}
     </ul>,
+    <Link to="/second-page" key="link">Go to second page</Link>,
   ];
 };
 
