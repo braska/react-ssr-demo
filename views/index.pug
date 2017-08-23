@@ -5,7 +5,8 @@ html
     title React SSR Demo
     link(rel='stylesheet', href=assets['main.css'])
   body
-    #root
+    #root.
+      !{content}
     script(src=assets['manifest.js'])
     script(src=assets['vendor.js'])
     script(src=assets['main.js'])

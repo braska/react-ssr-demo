@@ -3,9 +3,10 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const express = require('express');
 const path = require('path');
 
-const createRenderer = (manifest) => (req, res, next) => {
+const createRenderer = (render, manifest) => (req, res, next) => {
   res.render('index', {
     assets: manifest,
+    content: render(),
   });
 };
 
@@ -17,20 +18,21 @@ app.set('views', path.join(__dirname, 'views'));
 /* eslint-disable import/no-extraneous-dependencies, global-require, import/no-unresolved */
 if (NODE_ENV === 'development') {
   const webpack = require('webpack');
+  const webpackIsomorphicDevMiddleware = require('webpack-isomorphic-dev-middleware');
   const webpackConfig = require('./webpack.config');
   const compiler = webpack(webpackConfig);
-  app.use(require("webpack-dev-middleware")(compiler, {
-    noInfo: true, publicPath: webpackConfig.output.publicPath
-  }));
-  app.use(require("webpack-hot-middleware")(compiler));
+  app.use(webpackIsomorphicDevMiddleware(compiler));
+  app.use(require('webpack-hot-middleware')(compiler.compilers.find(c => c.name === 'client')));
   app.use((req, res, next) => {
-    const manifest = JSON.parse(compiler.outputFileSystem.readFileSync(path.join(__dirname, 'dist', 'manifest.json'), 'utf8'));
-    createRenderer(manifest)(req, res, next);
+    const render = res.locals.isomorphicCompilation.exports.default;
+    const manifest = JSON.parse(compiler.compilers.find(c => c.name === 'client').outputFileSystem.readFileSync(path.join(__dirname, 'dist', 'client', 'manifest.json'), 'utf8'));
+    createRenderer(render, manifest)(req, res, next);
   });
 } else {
-  const manifest = require('./dist/manifest.json');
-  app.use(express.static(path.join(__dirname, 'dist')));
-  app.use(createRenderer(manifest));
+  const render = require('./dist/server/render').default;
+  const manifest = require('./dist/client/manifest.json');
+  app.use(express.static(path.join(__dirname, 'dist', 'client')));
+  app.use(createRenderer(render, manifest));
 }
 /* eslint-enable import/no-extraneous-dependencies, global-require */
 

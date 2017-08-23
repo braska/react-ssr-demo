@@ -4,7 +4,7 @@ import { AppContainer } from 'react-hot-loader';
 import App from './app';
 
 const render = (Component) => {
-  ReactDOM.render(
+  ReactDOM.hydrate(
     <AppContainer>
       <Component />
     </AppContainer>,

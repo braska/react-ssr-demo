@@ -5,7 +5,8 @@
     "browser": true
   },
   "globals": {
-    "__DEV__": false
+    "__DEV__": false,
+    "__SERVER__": false
   },
   "settings": {
     "import/resolver": {
