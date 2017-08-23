@@ -14,7 +14,7 @@ const clientConfig = {
   context: path.resolve(__dirname, 'src'),
   entry: {
     main: (files => (NODE_ENV !== 'production' ? [
-      'webpack-hot-middleware/client',
+      'webpack-hot-middleware/client?name=client',
       'react-hot-loader/patch',
     ] : []).concat(files))(['./js/app']),
     vendor: ['babel-polyfill', './js/vendor'],
