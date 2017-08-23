@@ -4,8 +4,19 @@ const express = require('express');
 const path = require('path');
 
 const createRenderer = (render, manifest) => (req, res, next) => {
-  render()
-    .then(({ content, state }) => {
+  render(req)
+    .then(({ context, content, state }) => {
+      if (context.url) {
+        res.redirect(context.status || 301, context.url);
+        return;
+      }
+      if (context.status) {
+        res.status(context.status);
+      }
+      if (context.disableLayout) {
+        res.send(content);
+        return;
+      }
       res.render('index', {
         content,
         assets: manifest,
