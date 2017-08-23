@@ -7,3 +7,4 @@ import 'react-redux';
 import 'redux-saga';
 import 'redux-saga-thunk';
 import 'react-router-server';
+import 'react-router-dom';
