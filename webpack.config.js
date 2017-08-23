@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 const addHash = (template, hash) => (NODE_ENV === 'production' ? template.replace(/\.[^.]+(\.map)?$/, `.[${hash}]$&`) : template);
@@ -42,11 +43,23 @@ const clientConfig = {
       },
       {
         test: /\.css$/,
-        use: ['css-loader'],
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              query: {
+                modules: true,
+                importLoaders: 1,
+              },
+            },
+            'postcss-loader',
+          ],
+        }),
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/,
-        use: 'file-loader',
+        test: /\.(png|jpg|gif|svg|woff|woff2|eot|ttf)?(\?v=\d+.\d+.\d+)?$/,
+        loader: addHash('file?name=assets/[path][name].[ext]', 'hash'),
       },
     ],
   },
@@ -71,6 +84,7 @@ const clientConfig = {
     new ManifestPlugin({
       publicPath: '/',
     }),
+    new ExtractTextPlugin(addHash("assets/styles/[name].css", 'contenthash'), {allChunks: true}),
   ],
 };
 
